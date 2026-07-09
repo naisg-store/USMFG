@@ -158,10 +158,11 @@
         </div>
         <textarea id="inputText" placeholder="Type your bio, caption, or post here..."></textarea>
 
-        <div style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border); text-align: left;">
+        <div id="instructionBlock" style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border); text-align: left; position: relative; transition: all 0.4s ease-out; overflow: hidden; opacity: 1; max-height: 500px;">
+            <button onclick="dismissInstructions()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;" title="Close">&times;</button>
             <h2 style="font-size: 1.2rem; margin-top: 0; color: var(--text-main);">How to use this Instagram & TikTok Font Generator</h2>
             <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px;">Standard fonts disappear the second you paste them into a social media bio. Platforms aggressively strip out custom formatting. This tool bypasses those filters by converting your standard keyboard letters into universally recognized Unicode mathematical symbols and aesthetic text blocks.</p>
-            <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 0;"><strong>Instructions:</strong> Simply type your caption, bio, or username into the box above. The generator will instantly create dozens of variations including Double Struck, Cursive, Gothic, and Glitch text. Click on any style you like, and it will instantly copy to your clipboard, ready to be pasted into Instagram, TikTok, Discord, or Twitter.</p>
+            <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 0;"><strong>Instructions:</strong> Simply type your caption, bio, or username into the box above. The generator will instantly create dozens of variations. Click any style to copy it.</p>
         </div>
         
         <div id="resultsContainer">
@@ -324,6 +325,22 @@
 
         inputBox.addEventListener('input', updateResults);
         updateResults();
+
+        // Function to smoothly hide the instructions
+        function dismissInstructions() {
+            const block = document.getElementById('instructionBlock');
+            if(!block) return;
+            block.style.opacity = '0';
+            block.style.maxHeight = '0';
+            block.style.padding = '0 20px';
+            block.style.marginBottom = '0';
+            block.style.borderWidth = '0';
+            // Completely remove from document flow after transition
+            setTimeout(() => block.style.display = 'none', 400); 
+        }
+
+        // Auto-dismiss the very first time they tap the text area
+        document.getElementById('inputText').addEventListener('focus', dismissInstructions, { once: true });
     </script>
 </body>
 </html>

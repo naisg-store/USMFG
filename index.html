@@ -147,6 +147,16 @@
 <body>
 
     <div class="container">
+        <!-- Help Nav Menu -->
+        <div class="nav-header">
+            <button id="helpBtn" class="help-btn" onclick="toggleInstructions()" title="Toggle Help">&times;</button>
+            
+            <div id="instructionMenu" class="instruction-menu open">
+                <h2 style="font-size: 1.2rem; margin-top: 0; color: var(--text-main);">How to use this Generator</h2>
+                <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px;">Standard fonts disappear the second you paste them into a social media bio. Platforms aggressively strip out custom formatting. This tool bypasses those filters by converting your standard keyboard letters into universally recognized Unicode mathematical symbols and aesthetic text blocks.</p>
+                <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 0;"><strong>Instructions:</strong> Simply type your caption, bio, or username into the box below. The generator will instantly create dozens of variations. Click any style to copy it.</p>
+            </div>
+        </div>
         <div class="header">
             <h1>Ultimate Font Generator</h1>
             <p>Convert text into aesthetic fonts and text hacks. Click any style to copy.</p>
@@ -157,13 +167,6 @@
             <button class="clear-btn" onclick="clearText()">Clear Text</button>
         </div>
         <textarea id="inputText" placeholder="Type your bio, caption, or post here..."></textarea>
-
-        <div id="instructionBlock" style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border); text-align: left; position: relative; transition: all 0.4s ease-out; overflow: hidden; opacity: 1; max-height: 500px;">
-            <button onclick="dismissInstructions()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;" title="Close">&times;</button>
-            <h2 style="font-size: 1.2rem; margin-top: 0; color: var(--text-main);">How to use this Instagram & TikTok Font Generator</h2>
-            <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px;">Standard fonts disappear the second you paste them into a social media bio. Platforms aggressively strip out custom formatting. This tool bypasses those filters by converting your standard keyboard letters into universally recognized Unicode mathematical symbols and aesthetic text blocks.</p>
-            <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 0;"><strong>Instructions:</strong> Simply type your caption, bio, or username into the box above. The generator will instantly create dozens of variations. Click any style to copy it.</p>
-        </div>
         
         <div id="resultsContainer">
             <!-- JS will populate categories and fonts here -->

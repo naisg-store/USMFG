@@ -32,7 +32,68 @@
         }
 
         .container { width: 100%; max-width: 900px; }
-        .header { text-align: center; margin-bottom: 30px; }
+        
+        /* Help Menu & Overlay */
+        .nav-header {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: -20px;
+            z-index: 100;
+        }
+
+        .help-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            font-size: 1.3rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .help-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .instruction-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            width: calc(100vw - 40px);
+            max-width: 400px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px) scale(0.95);
+            transform-origin: top right;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+
+        .instruction-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
         h1 { margin: 0 0 10px 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
         p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
 
@@ -71,7 +132,7 @@
             min-height: 120px;
             outline: none;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             transition: box-shadow 0.2s, border-color 0.2s;
         }
 
@@ -141,12 +202,11 @@
         }
         #toast.show { opacity: 1; transform: translateY(0); }
     </style>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1332339337372732"
-     crossorigin="anonymous"></script>
 </head>
 <body>
 
     <div class="container">
+        
         <!-- Help Nav Menu -->
         <div class="nav-header">
             <button id="helpBtn" class="help-btn" onclick="toggleInstructions()" title="Toggle Help">&times;</button>
@@ -157,6 +217,7 @@
                 <p style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 0;"><strong>Instructions:</strong> Simply type your caption, bio, or username into the box below. The generator will instantly create dozens of variations. Click any style to copy it.</p>
             </div>
         </div>
+
         <div class="header">
             <h1>Ultimate Font Generator</h1>
             <p>Convert text into aesthetic fonts and text hacks. Click any style to copy.</p>
@@ -167,7 +228,12 @@
             <button class="clear-btn" onclick="clearText()">Clear Text</button>
         </div>
         <textarea id="inputText" placeholder="Type your bio, caption, or post here..."></textarea>
-        
+
+        <!-- Affiliate Ad Block -->
+        <a href="YOUR_AMAZON_LINK_HERE" target="_blank" style="display: block; width: 100%; box-sizing: border-box; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--accent); color: var(--accent); text-align: center; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem; margin-bottom: 30px; transition: all 0.2s;">
+            💡 Upgrade your content: Check out the best-selling Ring Light for creators on Amazon ➔
+        </a>
+
         <div id="resultsContainer">
             <!-- JS will populate categories and fonts here -->
         </div>
@@ -176,9 +242,35 @@
     <div id="toast">Copied to clipboard!</div>
 
     <script>
+        // Toggle Instructions Logic
+        function toggleInstructions() {
+            const menu = document.getElementById('instructionMenu');
+            const btn = document.getElementById('helpBtn');
+            
+            if (menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                btn.innerHTML = '?';
+            } else {
+                menu.classList.add('open');
+                btn.innerHTML = '&times;';
+            }
+        }
+
+        // Auto-dismiss the very first time they click into the text area
+        document.getElementById('inputText').addEventListener('focus', () => {
+            const menu = document.getElementById('instructionMenu');
+            const btn = document.getElementById('helpBtn');
+            
+            if (menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                btn.innerHTML = '?';
+            }
+        }, { once: true });
+
+
+        // Font Generation Logic
         const standardChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         
-        // Zalgo glitch character sets
         const glitchUp = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311', '\u0306', '\u0310', '\u0352', '\u0351', '\u0308', '\u030a', '\u0342', '\u0343', '\u0344', '\u034a', '\u034b', '\u034c', '\u0303', '\u0302', '\u030c', '\u0350', '\u0300', '\u0301', '\u030b', '\u030f', '\u0312', '\u0313', '\u0314', '\u033d', '\u0309', '\u0363', '\u0364', '\u0365', '\u0366', '\u0367', '\u0368', '\u0369', '\u036a', '\u036b', '\u036c', '\u036d', '\u036e', '\u036f', '\u033e', '\u035b', '\u0346', '\u031a'];
         const glitchDown = ['\u0316', '\u0317', '\u0318', '\u0319', '\u031c', '\u031d', '\u031e', '\u031f', '\u0320', '\u0324', '\u0325', '\u0326', '\u0329', '\u032a', '\u032b', '\u032c', '\u032d', '\u032e', '\u032f', '\u0330', '\u0331', '\u0332', '\u0333', '\u0339', '\u033a', '\u033b', '\u033c', '\u0345', '\u0347', '\u0348', '\u0349', '\u034d', '\u034e', '\u0353', '\u0354', '\u0355', '\u0356', '\u0359', '\u035a', '\u0323'];
 
@@ -227,11 +319,9 @@
                             return text.split('').map(char => {
                                 if (char === ' ') return char;
                                 let result = char;
-                                // Add 1-3 random marks above
                                 for(let i = 0; i < Math.floor(Math.random() * 3) + 1; i++) {
                                     result += glitchUp[Math.floor(Math.random() * glitchUp.length)];
                                 }
-                                // Add 1-3 random marks below
                                 for(let i = 0; i < Math.floor(Math.random() * 3) + 1; i++) {
                                     result += glitchDown[Math.floor(Math.random() * glitchDown.length)];
                                 }
@@ -328,22 +418,6 @@
 
         inputBox.addEventListener('input', updateResults);
         updateResults();
-
-        // Function to smoothly hide the instructions
-        function dismissInstructions() {
-            const block = document.getElementById('instructionBlock');
-            if(!block) return;
-            block.style.opacity = '0';
-            block.style.maxHeight = '0';
-            block.style.padding = '0 20px';
-            block.style.marginBottom = '0';
-            block.style.borderWidth = '0';
-            // Completely remove from document flow after transition
-            setTimeout(() => block.style.display = 'none', 400); 
-        }
-
-        // Auto-dismiss the very first time they tap the text area
-        document.getElementById('inputText').addEventListener('focus', dismissInstructions, { once: true });
     </script>
 </body>
 </html>

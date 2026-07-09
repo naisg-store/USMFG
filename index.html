@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ultimate Social Media Font Generator</title>
+    <meta name="description" content="Convert your text into aesthetic fonts, glitch text, and decorative symbols for Instagram, TikTok, and Twitter.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --surface: rgba(30, 41, 59, 0.5);
+            --surface-hover: rgba(99, 102, 241, 0.2);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: #818cf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { width: 100%; max-width: 900px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        h1 { margin: 0 0 10px 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+        p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+
+        .char-count { font-size: 0.9rem; color: var(--text-muted); }
+        
+        .clear-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0;
+        }
+        .clear-btn:hover { text-decoration: underline; }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            min-height: 120px;
+            outline: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+
+        textarea:focus { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .font-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .font-card:hover {
+            transform: translateY(-3px);
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .font-name {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .font-output { font-size: 1.3rem; word-break: break-word; line-height: 1.4; }
+
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Ultimate Font Generator</h1>
+            <p>Convert text into aesthetic fonts and text hacks. Click any style to copy.</p>
+        </div>
+
+        <div class="editor-header">
+            <span class="char-count" id="charCount">0 characters</span>
+            <button class="clear-btn" onclick="clearText()">Clear Text</button>
+        </div>
+        <textarea id="inputText" placeholder="Type your bio, caption, or post here..."></textarea>
+
+        <div id="resultsContainer">
+            <!-- JS will populate categories and fonts here -->
+        </div>
+    </div>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        const standardChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        
+        // Zalgo glitch character sets
+        const glitchUp = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311', '\u0306', '\u0310', '\u0352', '\u0351', '\u0308', '\u030a', '\u0342', '\u0343', '\u0344', '\u034a', '\u034b', '\u034c', '\u0303', '\u0302', '\u030c', '\u0350', '\u0300', '\u0301', '\u030b', '\u030f', '\u0312', '\u0313', '\u0314', '\u033d', '\u0309', '\u0363', '\u0364', '\u0365', '\u0366', '\u0367', '\u0368', '\u0369', '\u036a', '\u036b', '\u036c', '\u036d', '\u036e', '\u036f', '\u033e', '\u035b', '\u0346', '\u031a'];
+        const glitchDown = ['\u0316', '\u0317', '\u0318', '\u0319', '\u031c', '\u031d', '\u031e', '\u031f', '\u0320', '\u0324', '\u0325', '\u0326', '\u0329', '\u032a', '\u032b', '\u032c', '\u032d', '\u032e', '\u032f', '\u0330', '\u0331', '\u0332', '\u0333', '\u0339', '\u033a', '\u033b', '\u033c', '\u0345', '\u0347', '\u0348', '\u0349', '\u034d', '\u034e', '\u0353', '\u0354', '\u0355', '\u0356', '\u0359', '\u035a', '\u0323'];
+
+        const fontLibrary = [
+            {
+                category: "Core Aesthetics",
+                styles: [
+                    { name: "Serif Bold", chars: "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗" },
+                    { name: "Serif Italic", chars: "𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍0123456789" },
+                    { name: "Script / Cursive", chars: "𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵0123456789" },
+                    { name: "Script Bold", chars: "𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗" },
+                    { name: "Gothic Fraktur", chars: "𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷𝔄𝔅𝔆𝔇𝔈𝔉𝔊𝔋ℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ0123456789" },
+                    { name: "Double Struck", chars: "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡" },
+                    { name: "Small Caps", chars: "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" },
+                    { name: "Monospace", chars: "𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿" }
+                ]
+            },
+            {
+                category: "Symbols & Shapes",
+                styles: [
+                    { name: "Circled", chars: "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ⓪①②③④⑤⑥⑦⑧⑨" },
+                    { name: "Dark Circles", chars: "🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅞❶❷❸❹❺❻❼❽❾" },
+                    { name: "Squared", chars: "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉0123456789" },
+                    { name: "Fullwidth", chars: "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ０１２３４５６７８９" }
+                ]
+            },
+            {
+                category: "Text Hacks",
+                styles: [
+                    { 
+                        name: "Upside Down", 
+                        chars: "ɐqɔpǝɟƃɥıɾʞlɯuodbɹsʇnʌʍxʎz∀ꓭƆPƎℲפHIſꞰꞀWNOԀQꓤS⊥∩ΛMX⅄Z0123456789", 
+                        isReversed: true 
+                    },
+                    { 
+                        name: "Strikethrough", 
+                        transform: (text) => text.split('').map(c => c + '\u0336').join('') 
+                    },
+                    { 
+                        name: "Underline", 
+                        transform: (text) => text.split('').map(c => c + '\u0332').join('') 
+                    },
+                    { 
+                        name: "Glitch / Zalgo", 
+                        transform: (text) => {
+                            return text.split('').map(char => {
+                                if (char === ' ') return char;
+                                let result = char;
+                                // Add 1-3 random marks above
+                                for(let i = 0; i < Math.floor(Math.random() * 3) + 1; i++) {
+                                    result += glitchUp[Math.floor(Math.random() * glitchUp.length)];
+                                }
+                                // Add 1-3 random marks below
+                                for(let i = 0; i < Math.floor(Math.random() * 3) + 1; i++) {
+                                    result += glitchDown[Math.floor(Math.random() * glitchDown.length)];
+                                }
+                                return result;
+                            }).join('');
+                        }
+                    }
+                ]
+            },
+            {
+                category: "Decorations",
+                styles: [
+                    { name: "Sparkles", transform: (text) => `✨ ${text} ✨` },
+                    { name: "Coquette Bow", transform: (text) => `୨୧˚₊‧ ${text} ‧₊˚୨୧` },
+                    { name: "Japanese Bracket", transform: (text) => `【 ${text} 】` },
+                    { name: "Vaporwave Waves", transform: (text) => `ミ★ ${text} ★彡` }
+                ]
+            }
+        ];
+
+        const inputBox = document.getElementById('inputText');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const charCount = document.getElementById('charCount');
+        const toast = document.getElementById('toast');
+        let toastTimeout;
+
+        function clearText() {
+            inputBox.value = '';
+            updateResults();
+            inputBox.focus();
+        }
+
+        function translateText(text, targetChars, isReversed) {
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let index = standardChars.indexOf(char);
+                if (index !== -1 && targetChars) {
+                    result += Array.from(targetChars)[index];
+                } else {
+                    result += char;
+                }
+            }
+            if (isReversed) return result.split('').reverse().join('');
+            return result;
+        }
+
+        function updateResults() {
+            const rawText = inputBox.value || 'Type something cool...';
+            charCount.innerText = `${inputBox.value.length} characters`;
+            
+            let html = '';
+
+            fontLibrary.forEach(category => {
+                html += `<div class="category-title">${category.category}</div>`;
+                html += `<div class="results-grid">`;
+                
+                category.styles.forEach(font => {
+                    let translated = '';
+                    if (font.transform) {
+                        translated = font.transform(rawText);
+                    } else {
+                        translated = translateText(rawText, font.chars, font.isReversed);
+                    }
+
+                    html += `
+                        <div class="font-card" onclick="copyToClipboard(this, \`${translated.replace(/`/g, '\\`')}\`)">
+                            <span class="font-name">${font.name}</span>
+                            <div class="font-output">${translated}</div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            });
+
+            resultsContainer.innerHTML = html;
+        }
+
+        window.copyToClipboard = function(cardElement, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                toast.innerText = 'Copied to clipboard!';
+                toast.classList.add('show');
+                
+                cardElement.style.borderColor = '#10b981';
+                
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                    cardElement.style.borderColor = ''; 
+                }, 2000);
+            });
+        }
+
+        inputBox.addEventListener('input', updateResults);
+        updateResults();
+    </script>
+</body>
+</html>

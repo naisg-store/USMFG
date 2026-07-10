@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ultimate Social Media Font Generator</title>
+    <meta name="description" content="Convert your text into aesthetic fonts, glitch text, and decorative symbols for Instagram, TikTok, and Twitter.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --surface: rgba(30, 41, 59, 0.5);
+            --surface-hover: rgba(99, 102, 241, 0.2);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: #818cf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { width: 100%; max-width: 900px; }
+        
+        /* Help Menu & Overlay */
+        .nav-header {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: -20px;
+            z-index: 100;
+        }
+
+        .help-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            font-size: 1.3rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .help-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .instruction-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            width: calc(100vw - 40px);
+            max-width: 400px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px) scale(0.95);
+            transform-origin: top right;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+
+        .instruction-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+        h1 { margin: 0 0 10px 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+        p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+
+        .char-count { font-size: 0.9rem; color: var(--text-muted); }
+        
+        .clear-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0;
+        }
+        .clear-btn:hover { text-decoration: underline; }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            min-height: 120px;
+            outline: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+
+        textarea:focus { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .font-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .font-card:hover {
+            transform: translateY(-3px);
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .font-name {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .font-output { font-size: 1.3rem; word-break: break-word; line-height: 1.4; }
+
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div style="padding: 30px; background: rgba(30, 41, 59, 0.3); border-radius: 12px; border: 1px solid var(--border); text-align: left; line-height: 1.6; color: var(--text-muted); margin-bottom: 30px;">
+            <h2 style="color: var(--text-main); font-size: 1.5rem; margin-top: 0;">Terms of Service</h2>
+            <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+            
+            <h3 style="color: var(--text-main); font-size: 1.2rem;">Use of Service</h3>
+            <p>This tool is provided "as is" for personal and professional use. Users are strictly prohibited from utilizing this tool to generate text that promotes illegal acts, harassment, or violates the terms of service of third-party social media platforms.</p>
+
+            <h3 style="color: var(--text-main); font-size: 1.2rem;">Disclaimer of Warranties</h3>
+            <p>The site and its components are offered for informational and utility purposes only; we shall not be responsible or liable for the accuracy, usefulness, or availability of any information transmitted or made available via the site, and shall not be responsible or liable for any error or omissions in that information.</p>
+        </div>
+        
+        <!-- Footer Menu -->
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; display: flex; justify-content: center; gap: 25px; padding-bottom: 20px;">
+            <a href="privacy.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
+            <a href="tos.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Terms of Service</a>
+            <a href="about.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">About</a>
+        </div>
+    </div>
+
+</body>
+</html>

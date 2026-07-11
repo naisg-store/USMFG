@@ -36,11 +36,29 @@
             align-items: center;
         }
 
-        .container { width: 100%; max-width: 1000px; }
+        .container { 
+            width: 100%; 
+            max-width: 1000px; 
+        }
 
-        .header { text-align: center; margin-bottom: 40px; margin-top: 20px; }
-        h1 { margin: 0 0 10px 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
-        p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+        .header { 
+            text-align: center; 
+            margin-bottom: 40px; 
+            margin-top: 20px; 
+        }
+
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            letter-spacing: -1px; 
+        }
+
+        p { 
+            color: var(--text-muted); 
+            margin: 0; 
+            font-size: 1.1rem; 
+        }
 
         /* Filter Buttons */
         .filter-nav {
@@ -127,7 +145,6 @@
             line-height: 1.5;
             margin: 0;
         }
-
     </style>
 </head>
 <body>
@@ -154,21 +171,59 @@
     </div>
 
     <script>
-        // Formatted Data (Note: Devourer fixed to DPS)
         const wowData = [
-            { class: "Death Knight", spec: "Unholy", role: "dps", stats: "Mastery > Haste > Crit > Vers", notes: "Relies heavily on Mastery to boost pet damage and wound bursts." },
-            { class: "Death Knight", spec: "Blood", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste reduces Death Strike CD; Versatility smooths damage." },
-            { class: "Demon Hunter", spec: "Devourer", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "New Void magic spec. Priorities shift slightly based on Annihilator vs. Void-Scarred melee builds." },
-            { class: "Demon Hunter", spec: "Vengeance", role: "tank", stats: "Crit > Haste > Vers", notes: "Crit fuels Soul Fragments and damage mitigation." },
-            { class: "Druid", spec: "Balance", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces cast times and increases DoT ticking." },
-            { class: "Druid", spec: "Guardian", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste for Thrash/Swipe uptime; Versatility for armor scaling." },
-            { class: "Druid", spec: "Restoration", role: "heal", stats: "Haste > Mastery > Crit > Vers", notes: "Haste reaches breakpoints for Rejuvenation ticks." },
+            // DEATH KNIGHT
+            { class: "Death Knight", spec: "Unholy", role: "dps", stats: "Mastery > Haste > Crit > Vers", notes: "Mastery boosts pet damage and wound bursts." },
+            { class: "Death Knight", spec: "Frost", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Focuses on Killing Machine procs." },
+            { class: "Death Knight", spec: "Blood", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste reduces Death Strike cooldown." },
+            // DEMON HUNTER
+            { class: "Demon Hunter", spec: "Havoc", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Critical Strike fuels momentum." },
+            { class: "Demon Hunter", spec: "Devourer", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Void-based DPS; relies on cooldown uptime." },
+            { class: "Demon Hunter", spec: "Vengeance", role: "tank", stats: "Crit > Haste > Vers", notes: "Crit fuels Soul Fragments and mitigation." },
+            // DRUID
+            { class: "Druid", spec: "Balance", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces cast times and increases DoT ticks." },
+            { class: "Druid", spec: "Feral", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Maintains energy and combo point generation." },
+            { class: "Druid", spec: "Guardian", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste for Thrash uptime; Vers for armor." },
+            { class: "Druid", spec: "Restoration", role: "heal", stats: "Haste > Mastery > Crit > Vers", notes: "Haste for Rejuvenation tick breakpoints." },
+            // EVOKER
+            { class: "Evoker", spec: "Devastation", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Reduces cooldown downtime." },
             { class: "Evoker", spec: "Preservation", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Reduces cast times for Empower spells." },
-            { class: "Paladin", spec: "Retribution", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces cooldowns and global cooldowns for smoother rotation." },
+            // HUNTER
+            { class: "Hunter", spec: "Beast Mastery", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste is critical for pet attack speed." },
+            { class: "Hunter", spec: "Marksmanship", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Focuses on Aimed Shot windows." },
+            { class: "Hunter", spec: "Survival", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Drives Mongoose Bite cooldown reduction." },
+            // MAGE
+            { class: "Mage", spec: "Arcane", role: "dps", stats: "Mastery > Haste > Crit > Vers", notes: "Mastery increases mana efficiency." },
+            { class: "Mage", spec: "Fire", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Crits trigger Hot Streaks." },
+            { class: "Mage", spec: "Frost", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Increases proc rates for brain freeze." },
+            // MONK
+            { class: "Monk", spec: "Windwalker", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Balances burst windows with resources." },
+            { class: "Monk", spec: "Brewmaster", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shuffle/Stagger uptime." },
+            { class: "Monk", spec: "Mistweaver", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Essential for rapid HoT application." },
+            // PALADIN
+            { class: "Paladin", spec: "Retribution", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces rotation cooldowns." },
             { class: "Paladin", spec: "Protection", role: "tank", stats: "Haste > Crit > Vers", notes: "Haste for Shield of the Righteous uptime." },
-            { class: "Warrior", spec: "Arms", role: "dps", stats: "Haste (~20%) > Mastery > Crit", notes: "Reaching the Haste soft cap is essential before stacking Mastery." },
-            { class: "Warrior", spec: "Protection", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shield Block/Ignore Pain frequency." }
-            // Add the rest of your list here following this exact format!
+            { class: "Paladin", spec: "Holy", role: "heal", stats: "Crit > Haste > Mastery > Vers", notes: "Crit amplifies Glimmer and Holy Shock." },
+            // PRIEST
+            { class: "Priest", spec: "Shadow", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Vital for Insanity generation." },
+            { class: "Priest", spec: "Discipline", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Haste for Atonement application speed." },
+            { class: "Priest", spec: "Holy", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Haste improves prayer-based healing." },
+            // ROGUE
+            { class: "Rogue", spec: "Assassination", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Drives poison application." },
+            { class: "Rogue", spec: "Outlaw", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Crit triggers reroll mechanics." },
+            { class: "Rogue", spec: "Subtlety", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Maximizes burst window damage." },
+            // SHAMAN
+            { class: "Shaman", spec: "Elemental", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Enhances Lava Burst and Maelstrom." },
+            { class: "Shaman", spec: "Enhancement", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Crucial for Maelstrom Weapon stacks." },
+            { class: "Shaman", spec: "Restoration", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Improves Chain Heal frequency." },
+            // WARLOCK
+            { class: "Warlock", spec: "Affliction", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Increases DoT tick speed." },
+            { class: "Warlock", spec: "Demonology", role: "dps", stats: "Haste ≈ Crit > Mastery > Vers", notes: "Haste aids pet summoning frequency." },
+            { class: "Warlock", spec: "Destruction", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Crits trigger Chaos Bolt opportunities." },
+            // WARRIOR
+            { class: "Warrior", spec: "Arms", role: "dps", stats: "Haste (20%) > Mastery > Crit", notes: "Haste soft cap before stacking Mastery." },
+            { class: "Warrior", spec: "Fury", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste for Enrage and Rampage frequency." },
+            { class: "Warrior", spec: "Protection", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shield Block frequency." }
         ];
 
         const container = document.getElementById('specsContainer');
@@ -182,7 +237,7 @@
                     const card = document.createElement('div');
                     card.className = 'spec-card';
                     
-                    const roleLabel = item.role === 'dps' ? 'DPS' : item.role === 'tank' ? 'Tank' : 'Healer';
+                    const roleLabel = item.role.toUpperCase();
                     
                     card.innerHTML = `
                         <div class="class-title">

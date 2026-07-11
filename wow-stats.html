@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WoW Midnight (12.0.7) Stat Priorities - Mayteck C.S.</title>
+    <meta name="description" content="Quick reference cheat sheet for World of Warcraft: Midnight Season 1 stat priorities.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --surface: rgba(30, 41, 59, 0.5);
+            --surface-hover: rgba(99, 102, 241, 0.2);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: #818cf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            
+            /* WoW Role Colors */
+            --role-dps: #ef4444;
+            --role-tank: #3b82f6;
+            --role-heal: #10b981;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { width: 100%; max-width: 1000px; }
+
+        .header { text-align: center; margin-bottom: 40px; margin-top: 20px; }
+        h1 { margin: 0 0 10px 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+        p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+
+        /* Filter Buttons */
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .filter-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Grid Layout */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .spec-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .spec-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--border-hover);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .class-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .role-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        .role-dps { background: rgba(239, 68, 68, 0.2); color: var(--role-dps); border: 1px solid var(--role-dps); }
+        .role-tank { background: rgba(59, 130, 246, 0.2); color: var(--role-tank); border: 1px solid var(--role-tank); }
+        .role-heal { background: rgba(16, 185, 129, 0.2); color: var(--role-heal); border: 1px solid var(--role-heal); }
+
+        .stat-priority {
+            font-size: 0.95rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin: 15px 0 10px 0;
+            line-height: 1.4;
+        }
+
+        .spec-notes {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header">
+            <h1>Midnight Stat Priorities</h1>
+            <p>Patch 12.0.7 Quick Reference Guide</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-nav">
+            <button class="filter-btn active" onclick="filterSpecs('all')">All Roles</button>
+            <button class="filter-btn" onclick="filterSpecs('dps')">DPS</button>
+            <button class="filter-btn" onclick="filterSpecs('tank')">Tanks</button>
+            <button class="filter-btn" onclick="filterSpecs('heal')">Healers</button>
+        </div>
+
+        <div class="specs-grid" id="specsContainer">
+            <!-- Cards will be populated by JS -->
+        </div>
+
+    </div>
+
+    <script>
+        // Formatted Data (Note: Devourer fixed to DPS)
+        const wowData = [
+            { class: "Death Knight", spec: "Unholy", role: "dps", stats: "Mastery > Haste > Crit > Vers", notes: "Relies heavily on Mastery to boost pet damage and wound bursts." },
+            { class: "Death Knight", spec: "Blood", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste reduces Death Strike CD; Versatility smooths damage." },
+            { class: "Demon Hunter", spec: "Devourer", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "New Void magic spec. Priorities shift slightly based on Annihilator vs. Void-Scarred melee builds." },
+            { class: "Demon Hunter", spec: "Vengeance", role: "tank", stats: "Crit > Haste > Vers", notes: "Crit fuels Soul Fragments and damage mitigation." },
+            { class: "Druid", spec: "Balance", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces cast times and increases DoT ticking." },
+            { class: "Druid", spec: "Guardian", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste for Thrash/Swipe uptime; Versatility for armor scaling." },
+            { class: "Druid", spec: "Restoration", role: "heal", stats: "Haste > Mastery > Crit > Vers", notes: "Haste reaches breakpoints for Rejuvenation ticks." },
+            { class: "Evoker", spec: "Preservation", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Reduces cast times for Empower spells." },
+            { class: "Paladin", spec: "Retribution", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces cooldowns and global cooldowns for smoother rotation." },
+            { class: "Paladin", spec: "Protection", role: "tank", stats: "Haste > Crit > Vers", notes: "Haste for Shield of the Righteous uptime." },
+            { class: "Warrior", spec: "Arms", role: "dps", stats: "Haste (~20%) > Mastery > Crit", notes: "Reaching the Haste soft cap is essential before stacking Mastery." },
+            { class: "Warrior", spec: "Protection", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shield Block/Ignore Pain frequency." }
+            // Add the rest of your list here following this exact format!
+        ];
+
+        const container = document.getElementById('specsContainer');
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        function renderCards(filter) {
+            container.innerHTML = '';
+            
+            wowData.forEach(item => {
+                if (filter === 'all' || item.role === filter) {
+                    const card = document.createElement('div');
+                    card.className = 'spec-card';
+                    
+                    const roleLabel = item.role === 'dps' ? 'DPS' : item.role === 'tank' ? 'Tank' : 'Healer';
+                    
+                    card.innerHTML = `
+                        <div class="class-title">
+                            ${item.class}: ${item.spec}
+                            <span class="role-badge role-${item.role}">${roleLabel}</span>
+                        </div>
+                        <div class="stat-priority">${item.stats}</div>
+                        <p class="spec-notes">${item.notes}</p>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        window.filterSpecs = function(role) {
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderCards(role);
+        }
+
+        // Initial render
+        renderCards('all');
+    </script>
+</body>
+</html>

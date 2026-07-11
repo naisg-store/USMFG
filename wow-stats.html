@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>WoW Midnight (12.0.7) Stat Priorities - Mayteck C.S.</title>
-    <meta name="description" content="Quick reference cheat sheet for World of Warcraft: Midnight Season 1 stat priorities.">
+    <meta name="description" content="Quick reference cheat sheet for World of Warcraft: Midnight Season 1 stat priorities and rotations.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -38,7 +38,7 @@
 
         .container { 
             width: 100%; 
-            max-width: 1000px; 
+            max-width: 1200px; /* Widened slightly to accommodate the rotations */
         }
 
         .header { 
@@ -89,7 +89,7 @@
         /* Grid Layout */
         .specs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 20px;
         }
 
@@ -133,18 +133,70 @@
 
         .stat-priority {
             font-size: 0.95rem;
-            color: var(--accent);
+            color: var(--text-main);
             font-weight: 600;
-            margin: 15px 0 10px 0;
+            margin: 10px 0;
             line-height: 1.4;
         }
+        
+        .stat-highlight { color: var(--accent); }
 
         .spec-notes {
             font-size: 0.85rem;
             color: var(--text-muted);
             line-height: 1.5;
-            margin: 0;
+            margin: 0 0 15px 0;
         }
+
+        /* Rotation Styles */
+        .rotation-block {
+            margin-top: auto; /* Pushes rotation to the bottom of the card */
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .rotation-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .rotation-sequence {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .spell-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 8px 4px 4px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .spell-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .sequence-arrow {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -152,87 +204,216 @@
     <div class="container">
         
         <div class="header">
-            <h1>Midnight Stat Priorities</h1>
-            <p>Patch 12.0.7 Quick Reference Guide</p>
+            <h1>Midnight Cheat Sheet</h1>
+            <p>Patch 12.0.7 Priorities & Core Rotations</p>
         </div>
 
-        <!-- Filter Controls -->
         <div class="filter-nav">
             <button class="filter-btn active" onclick="filterSpecs('all')">All Roles</button>
             <button class="filter-btn" onclick="filterSpecs('dps')">DPS</button>
             <button class="filter-btn" onclick="filterSpecs('tank')">Tanks</button>
             <button class="filter-btn" onclick="filterSpecs('heal')">Healers</button>
         </div>
-    
+
         <div class="specs-grid" id="specsContainer">
             <!-- Cards will be populated by JS -->
         </div>
-                <!-- Footer Menu -->
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; display: flex; justify-content: center; gap: 25px; padding-bottom: 20px;">
-            <a href="privacy.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
-            <a href="tos.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Terms of Service</a>
-            <a href="about.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">About</a>
-        </div>
+
     </div>
 
     <script>
         const wowData = [
             // DEATH KNIGHT
-            { class: "Death Knight", spec: "Unholy", role: "dps", stats: "Mastery > Haste > Crit > Vers", notes: "Mastery boosts pet damage and wound bursts." },
-            { class: "Death Knight", spec: "Frost", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Focuses on Killing Machine procs." },
-            { class: "Death Knight", spec: "Blood", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste reduces Death Strike cooldown." },
+            { 
+                class: "Death Knight", spec: "Unholy", role: "dps", stats: "Mastery > Haste > Crit", notes: "Mastery boosts pet damage and wound bursts.",
+                rotation: [ {name: "Outbreak", icon: "spell_deathknight_outbreak"}, {name: "Dark Trans.", icon: "achievement_boss_festergutrotface"}, {name: "Apocalypse", icon: "spell_deathknight_apocalypse"}, {name: "Death Coil", icon: "spell_shadow_deathcoil"} ]
+            },
+            { 
+                class: "Death Knight", spec: "Frost", role: "dps", stats: "Crit > Haste > Mastery", notes: "Focuses on Killing Machine procs.",
+                rotation: [ {name: "Remorseless", icon: "ability_deathknight_remorselesswinter"}, {name: "Pillar", icon: "ability_deathknight_pillaroffrost"}, {name: "Obliterate", icon: "spell_deathknight_classicon"}, {name: "Frost Strike", icon: "spell_deathknight_empowerruneblade2"} ]
+            },
+            { 
+                class: "Death Knight", spec: "Blood", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste reduces Death Strike cooldown.",
+                rotation: [ {name: "Blood Boil", icon: "spell_deathknight_bloodboil"}, {name: "Marrowrend", icon: "ability_deathknight_marrowrend"}, {name: "Death Strike", icon: "spell_deathknight_butcher2"} ]
+            },
+            
             // DEMON HUNTER
-            { class: "Demon Hunter", spec: "Havoc", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Critical Strike fuels momentum." },
-            { class: "Demon Hunter", spec: "Devourer", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Void-based DPS; relies on cooldown uptime." },
-            { class: "Demon Hunter", spec: "Vengeance", role: "tank", stats: "Crit > Haste > Vers", notes: "Crit fuels Soul Fragments and mitigation." },
+            { 
+                class: "Demon Hunter", spec: "Havoc", role: "dps", stats: "Crit > Haste > Mastery", notes: "Critical Strike fuels momentum.",
+                rotation: [ {name: "Immolation", icon: "spell_fire_felfire"}, {name: "Eye Beam", icon: "ability_demonhunter_eyebeam"}, {name: "Blade Dance", icon: "ability_demonhunter_bladedance"}, {name: "Chaos Strike", icon: "ability_demonhunter_chaosstrike"} ]
+            },
+            { 
+                class: "Demon Hunter", spec: "Devourer", role: "dps", stats: "Haste > Crit > Mastery", notes: "Mid-range Intellect DPS. Consume Soul Fragments with Reap to fuel Void Metamorphosis.",
+                rotation: [ {name: "Hungering Slash", icon: "ability_demonhunter_bladedance"}, {name: "Reap", icon: "ability_demonhunter_soulcleave"}, {name: "Void Ray", icon: "ability_demonhunter_eyebeam"}, {name: "Collapsing Star", icon: "spell_priest_voidshift"} ]
+            },
+            { 
+                class: "Demon Hunter", spec: "Vengeance", role: "tank", stats: "Crit > Haste > Vers", notes: "Crit fuels Soul Fragments and mitigation.",
+                rotation: [ {name: "Immolation", icon: "spell_fire_felfire"}, {name: "Fracture", icon: "ability_demonhunter_fracture"}, {name: "Soul Cleave", icon: "ability_demonhunter_soulcleave"} ]
+            },
+
             // DRUID
-            { class: "Druid", spec: "Balance", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces cast times and increases DoT ticks." },
-            { class: "Druid", spec: "Feral", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Maintains energy and combo point generation." },
-            { class: "Druid", spec: "Guardian", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste for Thrash uptime; Vers for armor." },
-            { class: "Druid", spec: "Restoration", role: "heal", stats: "Haste > Mastery > Crit > Vers", notes: "Haste for Rejuvenation tick breakpoints." },
+            { 
+                class: "Druid", spec: "Balance", role: "dps", stats: "Haste > Crit > Mastery", notes: "Haste reduces cast times and DoT ticks.",
+                rotation: [ {name: "Moonfire", icon: "spell_nature_starfall"}, {name: "Sunfire", icon: "spell_nature_sunstrike"}, {name: "Starsurge", icon: "spell_magic_stringofcurses"}, {name: "Wrath", icon: "spell_nature_abolishmagic"} ]
+            },
+            { 
+                class: "Druid", spec: "Feral", role: "dps", stats: "Crit > Haste > Mastery", notes: "Maintains energy and combo point generation.",
+                rotation: [ {name: "Rake", icon: "ability_druid_disembowel"}, {name: "Shred", icon: "spell_shadow_vampiricaura"}, {name: "Rip", icon: "ability_ghoulfrenzy"}, {name: "Ferocious Bite", icon: "ability_druid_ferociousbite"} ]
+            },
+            { 
+                class: "Druid", spec: "Guardian", role: "tank", stats: "Haste > Vers > Mastery", notes: "Haste for Thrash uptime; Vers for armor.",
+                rotation: [ {name: "Thrash", icon: "spell_druid_thrash"}, {name: "Mangle", icon: "ability_druid_mangle2"}, {name: "Ironfur", icon: "ability_druid_ironfur"} ]
+            },
+            { 
+                class: "Druid", spec: "Restoration", role: "heal", stats: "Haste > Mastery > Crit", notes: "Haste for Rejuvenation tick breakpoints.",
+                rotation: [ {name: "Lifebloom", icon: "inv_misc_herb_felblossom"}, {name: "Rejuvenation", icon: "spell_nature_rejuvenation"}, {name: "Wild Growth", icon: "ability_druid_flourish"} ]
+            },
+
             // EVOKER
-            { class: "Evoker", spec: "Devastation", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Reduces cooldown downtime." },
-            { class: "Evoker", spec: "Preservation", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Reduces cast times for Empower spells." },
+            { 
+                class: "Evoker", spec: "Devastation", role: "dps", stats: "Haste > Crit > Mastery", notes: "Reduces cooldown downtime.",
+                rotation: [ {name: "Fire Breath", icon: "ability_evoker_firebreath"}, {name: "Eternity Surge", icon: "ability_evoker_eternitysurge"}, {name: "Disintegrate", icon: "ability_evoker_disintegrate"} ]
+            },
+            { 
+                class: "Evoker", spec: "Preservation", role: "heal", stats: "Haste > Crit > Mastery", notes: "Reduces cast times for Empower spells.",
+                rotation: [ {name: "Dream Breath", icon: "ability_evoker_dreambreath"}, {name: "Spiritbloom", icon: "ability_evoker_spiritbloom"}, {name: "Reversion", icon: "ability_evoker_reversion"} ]
+            },
+
             // HUNTER
-            { class: "Hunter", spec: "Beast Mastery", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste is critical for pet attack speed." },
-            { class: "Hunter", spec: "Marksmanship", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Focuses on Aimed Shot windows." },
-            { class: "Hunter", spec: "Survival", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Drives Mongoose Bite cooldown reduction." },
+            { 
+                class: "Hunter", spec: "Beast Mastery", role: "dps", stats: "Haste > Crit > Mastery", notes: "Haste is critical for pet attack speed.",
+                rotation: [ {name: "Barbed Shot", icon: "ability_hunter_barbedshot"}, {name: "Kill Command", icon: "ability_hunter_killcommand"}, {name: "Cobra Shot", icon: "ability_hunter_cobrashot"} ]
+            },
+            { 
+                class: "Hunter", spec: "Marksmanship", role: "dps", stats: "Crit > Haste > Mastery", notes: "Focuses on Aimed Shot windows.",
+                rotation: [ {name: "Rapid Fire", icon: "ability_hunter_rapidfire"}, {name: "Aimed Shot", icon: "inv_spear_07"}, {name: "Arcane Shot", icon: "ability_impalingbolt"} ]
+            },
+            { 
+                class: "Hunter", spec: "Survival", role: "dps", stats: "Haste > Crit > Mastery", notes: "Drives Mongoose Bite cooldown reduction.",
+                rotation: [ {name: "Wildfire Bomb", icon: "inv_eng_bombfire"}, {name: "Kill Command", icon: "ability_hunter_killcommand"}, {name: "Mongoose Bite", icon: "ability_hunter_swiftstrike"} ]
+            },
+
             // MAGE
-            { class: "Mage", spec: "Arcane", role: "dps", stats: "Mastery > Haste > Crit > Vers", notes: "Mastery increases mana efficiency." },
-            { class: "Mage", spec: "Fire", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Crits trigger Hot Streaks." },
-            { class: "Mage", spec: "Frost", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Increases proc rates for brain freeze." },
+            { 
+                class: "Mage", spec: "Arcane", role: "dps", stats: "Mastery > Haste > Crit", notes: "Mastery increases mana efficiency.",
+                rotation: [ {name: "Arcane Surge", icon: "spell_arcane_arcanetorrent"}, {name: "Arcane Barrage", icon: "spell_nature_starfall"}, {name: "Arcane Blast", icon: "spell_nature_wispsplode"} ]
+            },
+            { 
+                class: "Mage", spec: "Fire", role: "dps", stats: "Crit > Haste > Mastery", notes: "Crits trigger Hot Streaks.",
+                rotation: [ {name: "Combustion", icon: "spell_fire_sealoffire"}, {name: "Fire Blast", icon: "spell_fire_fireball"}, {name: "Pyroblast", icon: "spell_fire_fireball02"} ]
+            },
+            { 
+                class: "Mage", spec: "Frost", role: "dps", stats: "Haste > Crit > Mastery", notes: "Increases proc rates for brain freeze.",
+                rotation: [ {name: "Flurry", icon: "spell_frost_stun"}, {name: "Ice Lance", icon: "spell_frost_frostblast"}, {name: "Frostbolt", icon: "spell_frost_frostbolt02"} ]
+            },
+
             // MONK
-            { class: "Monk", spec: "Windwalker", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Balances burst windows with resources." },
-            { class: "Monk", spec: "Brewmaster", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shuffle/Stagger uptime." },
-            { class: "Monk", spec: "Mistweaver", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Essential for rapid HoT application." },
+            { 
+                class: "Monk", spec: "Windwalker", role: "dps", stats: "Crit > Haste > Mastery", notes: "Balances burst windows with resources.",
+                rotation: [ {name: "Tiger Palm", icon: "ability_monk_tigerpalm"}, {name: "Rising Sun", icon: "ability_monk_risingsunkick"}, {name: "Fists of Fury", icon: "ability_monk_fistsoffury"} ]
+            },
+            { 
+                class: "Monk", spec: "Brewmaster", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shuffle/Stagger uptime.",
+                rotation: [ {name: "Keg Smash", icon: "ability_monk_kegsmash"}, {name: "Blackout Kick", icon: "ability_monk_roundhousekick"}, {name: "Breath of Fire", icon: "ability_monk_breathoffire"} ]
+            },
+            { 
+                class: "Monk", spec: "Mistweaver", role: "heal", stats: "Haste > Crit > Mastery", notes: "Essential for rapid HoT application.",
+                rotation: [ {name: "Renewing Mist", icon: "ability_monk_renewingmists"}, {name: "Enveloping Mist", icon: "spell_monk_envelopingmist"}, {name: "Vivify", icon: "ability_monk_vivify"} ]
+            },
+
             // PALADIN
-            { class: "Paladin", spec: "Retribution", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste reduces rotation cooldowns." },
-            { class: "Paladin", spec: "Protection", role: "tank", stats: "Haste > Crit > Vers", notes: "Haste for Shield of the Righteous uptime." },
-            { class: "Paladin", spec: "Holy", role: "heal", stats: "Crit > Haste > Mastery > Vers", notes: "Crit amplifies Glimmer and Holy Shock." },
+            { 
+                class: "Paladin", spec: "Retribution", role: "dps", stats: "Haste > Crit > Mastery", notes: "Haste reduces rotation cooldowns.",
+                rotation: [ {name: "Blade of Justice", icon: "ability_paladin_bladeofjustice"}, {name: "Judgment", icon: "spell_holy_righteousfury"}, {name: "Templar's", icon: "spell_holy_templarsverdict"} ]
+            },
+            { 
+                class: "Paladin", spec: "Protection", role: "tank", stats: "Haste > Crit > Vers", notes: "Haste for Shield of the Righteous uptime.",
+                rotation: [ {name: "Judgment", icon: "spell_holy_righteousfury"}, {name: "Avenger's Shield", icon: "spell_holy_avengersshield"}, {name: "Shield of Right.", icon: "ability_paladin_shieldofvengeance"} ]
+            },
+            { 
+                class: "Paladin", spec: "Holy", role: "heal", stats: "Crit > Haste > Mastery", notes: "Crit amplifies Glimmer and Holy Shock.",
+                rotation: [ {name: "Holy Shock", icon: "spell_holy_searinglight"}, {name: "Word of Glory", icon: "inv_helmet_96"}, {name: "Holy Light", icon: "spell_holy_holybolt"} ]
+            },
+
             // PRIEST
-            { class: "Priest", spec: "Shadow", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Vital for Insanity generation." },
-            { class: "Priest", spec: "Discipline", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Haste for Atonement application speed." },
-            { class: "Priest", spec: "Holy", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Haste improves prayer-based healing." },
+            { 
+                class: "Priest", spec: "Shadow", role: "dps", stats: "Haste > Crit > Mastery", notes: "Vital for Insanity generation.",
+                rotation: [ {name: "Vampiric Touch", icon: "spell_holy_stoicism"}, {name: "Mind Blast", icon: "spell_shadow_unholyfrenzy"}, {name: "Devouring Plague", icon: "spell_shadow_blackplague"} ]
+            },
+            { 
+                class: "Priest", spec: "Discipline", role: "heal", stats: "Haste > Crit > Mastery", notes: "Haste for Atonement application speed.",
+                rotation: [ {name: "Power Word: Shield", icon: "spell_holy_powerwordshield"}, {name: "Purge the Wicked", icon: "ability_mage_firestarter"}, {name: "Penance", icon: "spell_holy_penance"} ]
+            },
+            { 
+                class: "Priest", spec: "Holy", role: "heal", stats: "Haste > Crit > Mastery", notes: "Haste improves prayer-based healing.",
+                rotation: [ {name: "Holy Word: Serenity", icon: "spell_holy_persuitofjustice"}, {name: "Prayer of Mending", icon: "spell_holy_spellwarding"}, {name: "Flash Heal", icon: "spell_holy_flashheal"} ]
+            },
+
             // ROGUE
-            { class: "Rogue", spec: "Assassination", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Drives poison application." },
-            { class: "Rogue", spec: "Outlaw", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Crit triggers reroll mechanics." },
-            { class: "Rogue", spec: "Subtlety", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Maximizes burst window damage." },
+            { 
+                class: "Rogue", spec: "Assassination", role: "dps", stats: "Haste > Crit > Mastery", notes: "Drives poison application.",
+                rotation: [ {name: "Garrote", icon: "ability_rogue_garrote"}, {name: "Mutilate", icon: "ability_rogue_shadowstrikes"}, {name: "Rupture", icon: "ability_rogue_rupture"}, {name: "Envenom", icon: "ability_rogue_disembowel"} ]
+            },
+            { 
+                class: "Rogue", spec: "Outlaw", role: "dps", stats: "Crit > Haste > Mastery", notes: "Crit triggers reroll mechanics.",
+                rotation: [ {name: "Roll the Bones", icon: "ability_rogue_rollthebones"}, {name: "Sinister Strike", icon: "spell_shadow_ritualofsacrifice"}, {name: "Dispatch", icon: "ability_rogue_dispatch"} ]
+            },
+            { 
+                class: "Rogue", spec: "Subtlety", role: "dps", stats: "Crit > Haste > Mastery", notes: "Maximizes burst window damage.",
+                rotation: [ {name: "Shadowstrike", icon: "ability_rogue_shadowstrike"}, {name: "Nightblade", icon: "ability_rogue_nightblade"}, {name: "Eviscerate", icon: "ability_rogue_eviscerate"} ]
+            },
+
             // SHAMAN
-            { class: "Shaman", spec: "Elemental", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Enhances Lava Burst and Maelstrom." },
-            { class: "Shaman", spec: "Enhancement", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Crucial for Maelstrom Weapon stacks." },
-            { class: "Shaman", spec: "Restoration", role: "heal", stats: "Haste > Crit > Mastery > Vers", notes: "Improves Chain Heal frequency." },
+            { 
+                class: "Shaman", spec: "Elemental", role: "dps", stats: "Crit > Haste > Mastery", notes: "Enhances Lava Burst and Maelstrom.",
+                rotation: [ {name: "Flame Shock", icon: "spell_fire_flameshock"}, {name: "Lava Burst", icon: "spell_shaman_lavaburst"}, {name: "Earth Shock", icon: "spell_nature_earthshock"} ]
+            },
+            { 
+                class: "Shaman", spec: "Enhancement", role: "dps", stats: "Haste > Crit > Mastery", notes: "Crucial for Maelstrom Weapon stacks.",
+                rotation: [ {name: "Stormstrike", icon: "ability_shaman_stormstrike"}, {name: "Lava Lash", icon: "ability_shaman_lavalash"}, {name: "Lightning Bolt", icon: "spell_nature_lightning"} ]
+            },
+            { 
+                class: "Shaman", spec: "Restoration", role: "heal", stats: "Haste > Crit > Mastery", notes: "Improves Chain Heal frequency.",
+                rotation: [ {name: "Riptide", icon: "spell_nature_riptide"}, {name: "Healing Stream", icon: "inv_spear_04"}, {name: "Chain Heal", icon: "spell_nature_healingwavegreater"} ]
+            },
+
             // WARLOCK
-            { class: "Warlock", spec: "Affliction", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Increases DoT tick speed." },
-            { class: "Warlock", spec: "Demonology", role: "dps", stats: "Haste ≈ Crit > Mastery > Vers", notes: "Haste aids pet summoning frequency." },
-            { class: "Warlock", spec: "Destruction", role: "dps", stats: "Crit > Haste > Mastery > Vers", notes: "Crits trigger Chaos Bolt opportunities." },
+            { 
+                class: "Warlock", spec: "Affliction", role: "dps", stats: "Haste > Crit > Mastery", notes: "Increases DoT tick speed.",
+                rotation: [ {name: "Agony", icon: "spell_shadow_curseofsargeras"}, {name: "Corruption", icon: "spell_shadow_abominationexplosion"}, {name: "Unstable Affl.", icon: "spell_shadow_unstableaffliction_3"}, {name: "Malefic Rapture", icon: "ability_warlock_soulswap"} ]
+            },
+            { 
+                class: "Warlock", spec: "Demonology", role: "dps", stats: "Haste ≈ Crit > Mastery", notes: "Haste aids pet summoning frequency.",
+                rotation: [ {name: "Call Dreadstalkers", icon: "spell_warlock_terrorsguard"}, {name: "Hand of Gul'dan", icon: "spell_shadow_summoninfernal"}, {name: "Demonbolt", icon: "spell_warlock_demonbolt"} ]
+            },
+            { 
+                class: "Warlock", spec: "Destruction", role: "dps", stats: "Crit > Haste > Mastery", notes: "Crits trigger Chaos Bolt opportunities.",
+                rotation: [ {name: "Immolate", icon: "spell_fire_immolation"}, {name: "Conflagrate", icon: "spell_fire_fireball"}, {name: "Chaos Bolt", icon: "ability_warlock_chaosbolt"} ]
+            },
+
             // WARRIOR
-            { class: "Warrior", spec: "Arms", role: "dps", stats: "Haste (20%) > Mastery > Crit", notes: "Haste soft cap before stacking Mastery." },
-            { class: "Warrior", spec: "Fury", role: "dps", stats: "Haste > Crit > Mastery > Vers", notes: "Haste for Enrage and Rampage frequency." },
-            { class: "Warrior", spec: "Protection", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shield Block frequency." }
+            { 
+                class: "Warrior", spec: "Arms", role: "dps", stats: "Haste (20%) > Mastery > Crit", notes: "Haste soft cap before stacking Mastery.",
+                rotation: [ {name: "Charge", icon: "ability_warrior_charge"}, {name: "Colossus Smash", icon: "ability_warrior_colossussmash"}, {name: "Mortal Strike", icon: "ability_warrior_savageblow"} ]
+            },
+            { 
+                class: "Warrior", spec: "Fury", role: "dps", stats: "Haste > Crit > Mastery", notes: "Haste for Enrage and Rampage frequency.",
+                rotation: [ {name: "Bloodthirst", icon: "spell_nature_bloodlust"}, {name: "Raging Blow", icon: "ability_warrior_punishingblow"}, {name: "Rampage", icon: "ability_warrior_rampage"} ]
+            },
+            { 
+                class: "Warrior", spec: "Protection", role: "tank", stats: "Haste > Vers > Crit", notes: "Haste for Shield Block frequency.",
+                rotation: [ {name: "Shield Block", icon: "ability_warrior_shieldblock"}, {name: "Shield Slam", icon: "inv_shield_05"}, {name: "Ignore Pain", icon: "ability_warrior_renewedvigor"} ]
+            }
         ];
 
         const container = document.getElementById('specsContainer');
         const buttons = document.querySelectorAll('.filter-btn');
+
+        // Fallback function for broken images
+        function handleImageError(img) {
+            img.onerror = null; // Prevent infinite loop if fallback also fails
+            img.src = 'https://wow.zamimg.com/images/wow/icons/small/inv_misc_questionmark.jpg';
+        }
 
         function renderCards(filter) {
             container.innerHTML = '';
@@ -244,13 +425,38 @@
                     
                     const roleLabel = item.role.toUpperCase();
                     
+                    // Build the rotation HTML dynamically
+                    let rotationHTML = '';
+                    if (item.rotation && item.rotation.length > 0) {
+                        rotationHTML = `
+                            <div class="rotation-block">
+                                <div class="rotation-title">Core Priority / Opener</div>
+                                <div class="rotation-sequence">
+                                    ${item.rotation.map((spell, index) => `
+                                        <div class="spell-item">
+                                            <img src="https://wow.zamimg.com/images/wow/icons/small/${spell.icon}.jpg" 
+                                                 alt="${spell.name}" 
+                                                 class="spell-icon"
+                                                 onerror="handleImageError(this)">
+                                            ${spell.name}
+                                        </div>
+                                        ${index < item.rotation.length - 1 ? '<span class="sequence-arrow">></span>' : ''}
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
                     card.innerHTML = `
                         <div class="class-title">
                             ${item.class}: ${item.spec}
                             <span class="role-badge role-${item.role}">${roleLabel}</span>
                         </div>
-                        <div class="stat-priority">${item.stats}</div>
+                        <div class="stat-priority">
+                            Priority: <span class="stat-highlight">${item.stats}</span>
+                        </div>
                         <p class="spec-notes">${item.notes}</p>
+                        ${rotationHTML}
                     `;
                     container.appendChild(card);
                 }
